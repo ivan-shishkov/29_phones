@@ -19,7 +19,7 @@ depends_on = None
 def upgrade():
     op.add_column(
         'orders',
-        sa.Column('contact_phone_normalized', sa.String(100)),
+        sa.Column('contact_phone_normalized', sa.String(100), index=True),
     )
 
 
