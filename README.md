@@ -1,6 +1,7 @@
 # Microservice for Search Index of Phone Numbers
 
-{TODO. There will be project description}
+This service allows you to normalize the phone numbers in the table with orders info for the online store database.
+This will make it convenient and quick to search for orders by phone number.
 
 # Project Goals
 
