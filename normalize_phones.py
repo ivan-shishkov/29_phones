@@ -1,4 +1,5 @@
 import time
+import re
 
 from sqlalchemy.exc import OperationalError
 import phonenumbers
@@ -12,22 +13,20 @@ TIMEOUT_BETWEEN_TRANSACTIONS = 5
 
 
 def get_normalized_phone_number(source_phone_number, region='RU'):
-    try:
-        return phonenumbers.parse(
-            source_phone_number,
-            region,
-        ).national_number
-    except NumberParseException:
-        pass
+    cleared_phone_number = ''.join(re.findall(r'\d+', source_phone_number))
 
+    if cleared_phone_number.startswith('8'):
+        cleared_phone_number = '{}{}'.format(
+            phonenumbers.country_code_for_valid_region(region),
+            source_phone_number,
+        )
     try:
-        return phonenumbers.parse(
-            '{}{}'.format(
-                phonenumbers.country_code_for_valid_region(region),
-                source_phone_number,
-            ),
-            region,
-        ).national_number
+        return str(
+            phonenumbers.parse(
+                cleared_phone_number,
+                region,
+            ).national_number,
+        )
     except NumberParseException:
         return ''
 
