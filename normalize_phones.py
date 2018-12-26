@@ -1,6 +1,8 @@
 import time
 
 from sqlalchemy.exc import OperationalError
+import phonenumbers
+from phonenumbers.phonenumberutil import NumberParseException
 
 from db import db_session, Order
 
@@ -9,13 +11,25 @@ TIMEOUT_WHEN_ERROR = 10
 TIMEOUT_BETWEEN_TRANSACTIONS = 5
 
 
-def get_normalized_phone_number(source_phone_number, count_digits=10):
-    if source_phone_number is None:
-        return ''
+def get_normalized_phone_number(source_phone_number, region='RU'):
+    try:
+        return phonenumbers.parse(
+            source_phone_number,
+            region,
+        ).national_number
+    except NumberParseException:
+        pass
 
-    return ''.join(
-        [symbol for symbol in source_phone_number if symbol.isdecimal()],
-    )[-count_digits:]
+    try:
+        return phonenumbers.parse(
+            '{}{}'.format(
+                phonenumbers.country_code_for_valid_region(region),
+                source_phone_number,
+            ),
+            region,
+        ).national_number
+    except NumberParseException:
+        return ''
 
 
 def normalize_contact_phones(orders):
