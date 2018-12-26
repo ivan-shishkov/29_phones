@@ -13,6 +13,9 @@ TIMEOUT_BETWEEN_TRANSACTIONS = 5
 
 
 def get_normalized_phone_number(source_phone_number, region='RU'):
+    if source_phone_number is None:
+        return ''
+
     cleared_phone_number = ''.join(re.findall(r'\d+', source_phone_number))
 
     if cleared_phone_number.startswith('8'):
