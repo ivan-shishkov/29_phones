@@ -21,7 +21,7 @@ def get_normalized_phone_number(source_phone_number, region='RU'):
     if cleared_phone_number.startswith('8'):
         cleared_phone_number = '{}{}'.format(
             phonenumbers.country_code_for_valid_region(region),
-            source_phone_number,
+            cleared_phone_number,
         )
     try:
         return str(
